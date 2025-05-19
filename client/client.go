@@ -122,7 +122,6 @@ func (c *ListClient) ListRange(key string, start, end int) ([]string, error) {
 	return c.cmdable.ListRange(key, start, end)
 }
 
-// For backward compatibility.
 // Get retrieves a string value from the cache.
 func (c *Client) Get(key string) (string, error) {
 	return c.String().Get(key)
@@ -201,7 +200,6 @@ func (c *TTLClient) RemoveTTL(key string) error {
 	return c.cmdable.RemoveTTL(key)
 }
 
-// For backward compatibility.
 // SetTTL sets the TTL for a key.
 func (c *Client) SetTTL(key string, ttl time.Duration) error {
 	return c.TTL().SetTTL(key, ttl)
@@ -240,7 +238,6 @@ func (c *Client) Clear() error {
 
 // Close closes the client and releases any resources.
 func (c *Client) Close() error {
-	// If the cache is a MemoryCache, we need to stop the cleanup goroutine.
 	if memCache, ok := c.cache.(*cache.MemoryCache); ok {
 		memCache.Stop()
 	}
