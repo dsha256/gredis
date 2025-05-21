@@ -15,9 +15,9 @@ type StringRequest struct {
 	TTL   time.Duration `json:"ttl,omitempty"` // in seconds
 }
 
-// GetString handles GET /api/string/{key}
+// GetString handles GET /api/v1/string/{key}
 func (h *Handler) GetString(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/string/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/string/")
 
 	value, found := h.Cache.Get(key)
 	if !found {
@@ -31,9 +31,9 @@ func (h *Handler) GetString(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// SetString handles POST /api/string/{key}
+// SetString handles POST /api/v1/string/{key}
 func (h *Handler) SetString(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/string/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/string/")
 
 	var req StringRequest
 	if !h.DecodeJSON(w, r, &req) {
@@ -57,9 +57,9 @@ func (h *Handler) SetString(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// UpdateString handles PUT /api/string/{key}
+// UpdateString handles PUT /api/v1/string/{key}
 func (h *Handler) UpdateString(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/string/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/string/")
 
 	var req StringRequest
 	if !h.DecodeJSON(w, r, &req) {

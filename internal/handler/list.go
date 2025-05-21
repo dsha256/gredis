@@ -21,9 +21,9 @@ type ListRangeRequest struct {
 	End   int `json:"end"`
 }
 
-// PushFront handles POST /api/list/{key}/front
+// PushFront handles POST /api/v1/list/{key}/front
 func (h *Handler) PushFront(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/list/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/list/")
 	key = strings.TrimSuffix(key, "/front")
 
 	var req ListRequest
@@ -42,9 +42,9 @@ func (h *Handler) PushFront(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// PushBack handles POST /api/list/{key}/back
+// PushBack handles POST /api/v1/list/{key}/back
 func (h *Handler) PushBack(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/list/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/list/")
 	key = strings.TrimSuffix(key, "/back")
 
 	var req ListRequest
@@ -64,9 +64,9 @@ func (h *Handler) PushBack(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// PopFront handles DELETE /api/list/{key}/front
+// PopFront handles DELETE /api/v1/list/{key}/front
 func (h *Handler) PopFront(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/list/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/list/")
 	key = strings.TrimSuffix(key, "/front")
 
 	value, found := h.Cache.PopFront(key)
@@ -81,9 +81,9 @@ func (h *Handler) PopFront(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// PopBack handles DELETE /api/list/{key}/back
+// PopBack handles DELETE /api/v1/list/{key}/back
 func (h *Handler) PopBack(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/list/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/list/")
 	key = strings.TrimSuffix(key, "/back")
 
 	value, found := h.Cache.PopBack(key)
@@ -98,9 +98,9 @@ func (h *Handler) PopBack(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// ListRange handles GET /api/list/{key}/range
+// ListRange handles GET /api/v1/list/{key}/range
 func (h *Handler) ListRange(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/list/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/list/")
 	key = strings.TrimSuffix(key, "/range")
 
 	startStr := r.URL.Query().Get("start")

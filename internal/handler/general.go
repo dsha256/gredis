@@ -9,9 +9,9 @@ import (
 	"github.com/dsha256/gredis/internal/responder"
 )
 
-// Remove handles DELETE /api/key/{key}
+// Remove handles DELETE /api/v1/key/{key}
 func (h *Handler) Remove(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/key/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/key/")
 
 	if err := h.Cache.Remove(key); err != nil {
 		h.HandleError(w, err)
@@ -23,9 +23,9 @@ func (h *Handler) Remove(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Exists handles GET /api/key/{key}/exists
+// Exists handles GET /api/v1/key/{key}/exists
 func (h *Handler) Exists(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/key/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/key/")
 	key = strings.TrimSuffix(key, "/exists")
 
 	exists := h.Cache.Exists(key)
@@ -36,9 +36,9 @@ func (h *Handler) Exists(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Type handles GET /api/key/{key}/type
+// Type handles GET /api/v1/key/{key}/type
 func (h *Handler) Type(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/key/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/key/")
 	key = strings.TrimSuffix(key, "/type")
 
 	dataType, found := h.Cache.Type(key)
@@ -63,7 +63,7 @@ func (h *Handler) Type(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// Clear handles DELETE /api/keys
+// Clear handles DELETE /api/v1/keys
 func (h *Handler) Clear(w http.ResponseWriter, _ *http.Request) {
 	err := h.Cache.Clear()
 	if err != nil {

@@ -15,9 +15,9 @@ type TTLRequest struct {
 	TTL time.Duration `json:"ttl"` // in seconds
 }
 
-// SetTTL handles PUT /api/ttl/{key}
+// SetTTL handles PUT /api/v1/ttl/{key}
 func (h *Handler) SetTTL(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/ttl/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/ttl/")
 
 	var req TTLRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -36,9 +36,9 @@ func (h *Handler) SetTTL(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GetTTL handles GET /api/ttl/{key}
+// GetTTL handles GET /api/v1/ttl/{key}
 func (h *Handler) GetTTL(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/ttl/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/ttl/")
 
 	ttl, found := h.Cache.GetTTL(key)
 	if !found {
@@ -59,9 +59,9 @@ func (h *Handler) GetTTL(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// RemoveTTL handles DELETE /api/ttl/{key}
+// RemoveTTL handles DELETE /api/v1/ttl/{key}
 func (h *Handler) RemoveTTL(w http.ResponseWriter, r *http.Request) {
-	key := strings.TrimPrefix(r.URL.Path, "/api/ttl/")
+	key := strings.TrimPrefix(r.URL.Path, "/api/v1/ttl/")
 
 	if err := h.Cache.RemoveTTL(key); err != nil {
 		h.HandleError(w, err)
