@@ -1,0 +1,29 @@
+version: "3"
+
+env:
+  ENV: local
+
+vars:
+  GOBIN:
+    sh: go env GOPATH | sed 's/$/\/bin/'
+
+tasks:
+  lint:
+    desc: "Run linter."
+    cmds:
+      - golangci-lint run
+
+  test:
+    desc: "Run all tests in verbose mode with race detection enabled."
+    cmds:
+      - go test -v -race ./...
+
+  compose-up:
+    desc: "Docker compose up."
+    cmds:
+      - docker compose up --build
+
+  compose-down:
+    desc: "Docker compose down."
+    cmds:
+      - docker compose down --remove-orphans --volumes

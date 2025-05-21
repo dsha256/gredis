@@ -1,5 +1,5 @@
 server:
-  port: 3001
+  port: 8090
   read_timeout: "5s"
   read_header_timeout: "5s"
   write_timeout: "10s"
