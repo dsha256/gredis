@@ -1,8 +1,31 @@
-# Gredis
+# Gredis 🚀
 
 Gredis is a simple in-memory data structure store inspired by Redis, implemented in Go.
 
-## Features
+## Table of Contents 📑
+- [Features](#features-)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Basic Usage](#basic-usage)
+  - [Using Specialized Clients](#using-specialized-clients)
+  - [String Operations](#string-operations)
+  - [List Operations](#list-operations)
+  - [TTL Operations](#ttl-operations)
+  - [Other Operations](#other-operations)
+- [API Endpoints](#api-endpoints-)
+  - [String Operations](#string-operations-api)
+  - [List Operations](#list-operations-api)
+  - [TTL Operations](#ttl-operations-api)
+  - [General Operations](#general-operations-api)
+- [Running Locally with Docker](#running-locally-with-docker-)
+  - [Using Docker Directly](#using-docker-directly)
+  - [Using Docker Compose](#using-docker-compose)
+  - [Using Taskfile](#using-taskfile)
+- [Taskfile Commands](#taskfile-commands)
+- [Examples](#examples)
+- [License](#license)
+
+## Features ✨
 
 - **Data Structures**:
   - Strings
@@ -246,10 +269,477 @@ c.Clear()
 c.Close()
 ```
 
-## Examples
+## API Endpoints 🌐
+
+Gredis provides a RESTful API for interacting with the cache. Below are the available endpoints and examples of how to use them with cURL.
+
+### String Operations API
+
+#### Get a string value
+
+```
+GET /api/v1/string/{key}
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:8090/api/v1/string/greeting
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "value": "Hello, World!"
+  },
+  "msg": "Value retrieved successfully"
+}
+```
+
+#### Set a string value
+
+```
+POST /api/v1/string/{key}
+```
+
+**Request Body:**
+```json
+{
+  "value": "Hello, World!",
+  "ttl": 60
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8090/api/v1/string/greeting \
+  -H "Content-Type: application/json" \
+  -d '{"value": "Hello, World!", "ttl": 60}'
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "value": "Hello, World!"
+  },
+  "msg": "Value set successfully"
+}
+```
+
+#### Update a string value
+
+```
+PUT /api/v1/string/{key}
+```
+
+**Request Body:**
+```json
+{
+  "value": "Updated value"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT http://localhost:8090/api/v1/string/greeting \
+  -H "Content-Type: application/json" \
+  -d '{"value": "Updated value"}'
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "value": "Updated value"
+  },
+  "msg": "Value updated successfully"
+}
+```
+
+### List Operations API
+
+#### Push a value to the front of a list
+
+```
+POST /api/v1/list/{key}/front
+```
+
+**Request Body:**
+```json
+{
+  "value": "first item"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8090/api/v1/list/mylist/front \
+  -H "Content-Type: application/json" \
+  -d '{"value": "first item"}'
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "mylist",
+    "value": "first item"
+  },
+  "msg": "Value pushed to front of list successfully"
+}
+```
+
+#### Push a value to the back of a list
+
+```
+POST /api/v1/list/{key}/back
+```
+
+**Request Body:**
+```json
+{
+  "value": "last item"
+}
+```
+
+**cURL Example:**
+```bash
+curl -X POST http://localhost:8090/api/v1/list/mylist/back \
+  -H "Content-Type: application/json" \
+  -d '{"value": "last item"}'
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "mylist",
+    "value": "last item"
+  },
+  "msg": "Value pushed to back of list successfully"
+}
+```
+
+#### Pop a value from the front of a list
+
+```
+DELETE /api/v1/list/{key}/front
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:8090/api/v1/list/mylist/front
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "mylist",
+    "value": "first item"
+  },
+  "msg": "Value popped from front of list successfully"
+}
+```
+
+#### Pop a value from the back of a list
+
+```
+DELETE /api/v1/list/{key}/back
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:8090/api/v1/list/mylist/back
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "mylist",
+    "value": "last item"
+  },
+  "msg": "Value popped from back of list successfully"
+}
+```
+
+#### Get a range of values from a list
+
+```
+GET /api/v1/list/{key}/range?start={start}&end={end}
+```
+
+**cURL Example:**
+```bash
+curl -X GET "http://localhost:8090/api/v1/list/mylist/range?start=0&end=-1"
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "mylist",
+    "start": 0,
+    "end": -1,
+    "values": ["first item", "middle item", "last item"]
+  },
+  "msg": "List range retrieved successfully"
+}
+```
+
+### TTL Operations API
+
+#### Set TTL for a key
+
+```
+PUT /api/v1/ttl/{key}
+```
+
+**Request Body:**
+```json
+{
+  "ttl": 60
+}
+```
+
+**cURL Example:**
+```bash
+curl -X PUT http://localhost:8090/api/v1/ttl/greeting \
+  -H "Content-Type: application/json" \
+  -d '{"ttl": 60}'
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "ttl": 60
+  },
+  "msg": "TTL set successfully"
+}
+```
+
+#### Get TTL for a key
+
+```
+GET /api/v1/ttl/{key}
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:8090/api/v1/ttl/greeting
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "ttl": 58.5
+  },
+  "msg": "TTL retrieved successfully"
+}
+```
+
+#### Remove TTL for a key
+
+```
+DELETE /api/v1/ttl/{key}
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:8090/api/v1/ttl/greeting
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting"
+  },
+  "msg": "TTL removed successfully"
+}
+```
+
+### General Operations API
+
+#### Remove a key
+
+```
+DELETE /api/v1/key/{key}
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:8090/api/v1/key/greeting
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting"
+  },
+  "msg": "Key removed successfully"
+}
+```
+
+#### Check if a key exists
+
+```
+GET /api/v1/key/{key}/exists
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:8090/api/v1/key/greeting/exists
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "exists": true
+  },
+  "msg": "Key existence checked"
+}
+```
+
+#### Get the type of a key
+
+```
+GET /api/v1/key/{key}/type
+```
+
+**cURL Example:**
+```bash
+curl -X GET http://localhost:8090/api/v1/key/greeting/type
+```
+
+**Response:**
+```json
+{
+  "data": {
+    "key": "greeting",
+    "type": "string"
+  },
+  "msg": "Key type retrieved successfully"
+}
+```
+
+#### Clear all keys
+
+```
+DELETE /api/v1/keys
+```
+
+**cURL Example:**
+```bash
+curl -X DELETE http://localhost:8090/api/v1/keys
+```
+
+**Response:**
+```json
+{
+  "data": {},
+  "msg": "Cache cleared successfully"
+}
+```
+
+## Running Locally with Docker 🐳
+
+Gredis can be easily run locally using Docker. There are two main ways to run the application:
+
+### Using Docker Directly
+
+To build and run the application using Docker directly:
+
+```bash
+# Build the Docker image
+docker build -t gredis .
+
+# Run the container in development mode
+docker run -p 8090:8090 -v $(pwd)/config.yaml:/app/config.yaml --name gredis-dev gredis
+
+# Or run in production mode
+docker run -p 8090:8090 -v $(pwd)/config.yaml:/app/config.yaml --name gredis-prod --target production gredis
+```
+
+### Using Docker Compose
+
+For a more convenient setup, you can use Docker Compose:
+
+```bash
+# Start the application with Docker Compose
+docker compose up --build
+
+# Run in detached mode
+docker compose up -d
+
+# Stop and remove containers
+docker compose down --remove-orphans --volumes
+```
+
+### Using Taskfile
+
+If you have [Task](https://taskfile.dev/) installed, you can use the following commands to manage Docker Compose:
+
+```bash
+# Start the application with Docker Compose
+task compose-up
+
+# Stop and remove Docker Compose containers
+task compose-down
+```
+
+Once the application is running, you can access the API at `http://localhost:8090`.
+
+## Taskfile Commands 🛠️
+
+Gredis uses [Task](https://taskfile.dev/) for common development operations. Below are the available commands:
+
+### Lint
+
+Run the linter to check code quality:
+
+```bash
+task lint
+```
+
+### Test
+
+Run all tests with race detection enabled:
+
+```bash
+task test
+```
+
+### Docker Compose
+
+Start the application with Docker Compose:
+
+```bash
+task compose-up
+```
+
+Stop and remove Docker Compose containers:
+
+```bash
+task compose-down
+```
+
+## Examples 📚
 
 See the [examples](examples) directory for more detailed examples.
 
-## License
+## License 📄
 
 This project is licensed under the MIT License - see the LICENSE file for details.
